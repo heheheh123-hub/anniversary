@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Anniversary ❤️</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#0f0f0f;
+color:white;
+overflow-x:hidden;
+}
+
+section{
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+padding:40px;
+text-align:center;
+}
+
+h1{
+font-size:60px;
+margin-bottom:20px;
+}
+
+p{
+max-width:800px;
+font-size:22px;
+line-height:1.8;
+}
+
+button{
+margin-top:30px;
+padding:15px 40px;
+font-size:20px;
+border:none;
+border-radius:50px;
+background:#ff4d6d;
+color:white;
+cursor:pointer;
+transition:.3s;
+}
+
+button:hover{
+transform:scale(1.05);
+}
+
+.fade{
+opacity:0;
+transform:translateY(40px);
+transition:1s;
+}
+
+.fade.show{
+opacity:1;
+transform:translateY(0);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<section>
+
+<h1>Happy Anniversary ❤️</h1>
+
+<p>
+I made this little website just for you.
+Click below and scroll.
+</p>
+
+<button onclick="document.getElementById('story').scrollIntoView({behavior:'smooth'})">
+Begin ❤️
+</button>
+
+</section>
+
+<section id="story" class="fade">
+
+<h1>Our Story</h1>
+
+<p>
+Write how you met here...
+</p>
+
+</section>
+
+<section class="fade">
+
+<h1>Why I Love You ❤️</h1>
+
+<p>
+Write all the reasons you love her here...
+</p>
+
+</section>
+
+<section class="fade">
+
+<h1>My Letter 💌</h1>
+
+<p>
+Paste your five paragraphs here.
+</p>
+
+</section>
+
+<section class="fade">
+
+<h1>I Love You ❤️</h1>
+
+<p>
+Happy Anniversary.
+Thank you for choosing me every single day.
+I can't wait to make thousands more memories with you.
+</p>
+
+</section>
+
+<script>
+
+const observer=new IntersectionObserver(entries=>{
+entries.forEach(entry=>{
+if(entry.isIntersecting){
+entry.target.classList.add("show");
+}
+});
+});
+
+document.querySelectorAll(".fade").forEach(el=>{
+observer.observe(el);
+});
+
+</script>
+
+</body>
+</html>
