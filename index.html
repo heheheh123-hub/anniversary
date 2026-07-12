@@ -83,15 +83,42 @@ opacity:1;
 transform:translateY(0);
 }
 
-.hearts{
+.hearts span{
 position:fixed;
 bottom:-50px;
-width:100%;
-text-align:center;
 font-size:30px;
 animation:floatHearts 8s infinite linear;
 opacity:0.8;
-pointer-events:none;
+}
+
+.hearts span:nth-child(1){
+left:10%;
+animation-delay:0s;
+}
+
+.hearts span:nth-child(2){
+left:20%;
+animation-delay:2s;
+}
+
+.hearts span:nth-child(3){
+left:80%;
+animation-delay:1s;
+}
+
+.hearts span:nth-child(4){
+left:90%;
+animation-delay:3s;
+}
+
+.hearts span:nth-child(5){
+left:70%;
+animation-delay:5s;
+}
+
+.hearts span:nth-child(6){
+left:30%;
+animation-delay:4s;
 }
 
 @keyframes floatHearts{
@@ -124,6 +151,10 @@ transform:translateY(-100vh);
 }
 }
 
+#noBtn{
+position:relative;
+transition:0.2s;
+}
 </style>
 
 </head>
@@ -134,20 +165,27 @@ transform:translateY(-100vh);
 </div>
 
 <div class="hearts">
-❤️ ❤️ ❤️ ❤️ ❤️
+<span>❤️</span>
+<span>❤️</span>
+<span>❤️</span>
+<span>❤️</span>
+<span>❤️</span>
+<span>❤️</span>
 </div>
 
 <section>
 
 <h1 id="title"></h1>
+
 <p>
-I made this little website just for you.
-Click below and scroll.
+I made this little website just for you ❤️
 </p>
 
-<button onclick="document.getElementById('story').scrollIntoView({behavior:'smooth'})">
-Begin ❤️
-</button>
+<h2>Do you love me? 🥺</h2>
+
+<div>
+<button onclick="yesLove()">Yes ❤️</button>
+<button id="noBtn" onmouseover="moveNo()" ontouchstart="moveNo()">No 💔</button></div>
 
 </section>
 
@@ -220,7 +258,24 @@ function typeTitle() {
 
 typeTitle();
 
+function yesLove(){
+document.getElementById('story').scrollIntoView({
+behavior:'smooth'
+});
+}
+
+function moveNo(){
+
+let button=document.getElementById("noBtn");
+
+let x=Math.random()*400-200;
+let y=Math.random()*250-125;
+
+button.style.transform=`translate(${x}px,${y}px)`;
+
+}
 </script>
+
 
 </body>
 </html>
