@@ -76,8 +76,7 @@ transform:translateY(0);
 
 <section>
 
-<h1>Happy Anniversary ❤️</h1>
-
+<h1 id="title"></h1>
 <p>
 I made this little website just for you.
 Click below and scroll.
@@ -144,6 +143,19 @@ entry.target.classList.add("show");
 document.querySelectorAll(".fade").forEach(el=>{
 observer.observe(el);
 });
+
+const text = "Happy Anniversary ❤️";
+let i = 0;
+
+function typeTitle() {
+    if (i < text.length) {
+        document.getElementById("title").innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typeTitle, 100);
+    }
+}
+
+typeTitle();
 
 </script>
 
