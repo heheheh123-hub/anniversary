@@ -155,6 +155,65 @@ transform:translateY(-100vh);
 position:relative;
 transition:0.2s;
 }
+#welcome{
+height:100vh;
+overflow:hidden;
+}
+#letter{
+min-height:100vh;
+}
+
+.letterIcon{
+font-size:100px;
+animation:shake 2s infinite, glow 2s infinite alternate;
+}
+
+@keyframes shake{
+
+0%,100%{
+transform:rotate(0deg);
+}
+
+25%{
+transform:rotate(5deg);
+}
+
+75%{
+transform:rotate(-5deg);
+}
+
+}
+
+@keyframes glow{
+
+from{
+text-shadow:0 0 10px #ff4d6d;
+}
+
+to{
+text-shadow:0 0 40px #ff4d6d;
+}
+
+}
+
+.chapter{
+display:none;
+animation:appear 1s;
+}
+
+@keyframes appear{
+
+from{
+opacity:0;
+transform:translateY(50px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
 </style>
 
 </head>
@@ -173,7 +232,7 @@ transition:0.2s;
 <span>❤️</span>
 </div>
 
-<section>
+<section id="welcome">
 
 <h1 id="title"></h1>
 
@@ -189,46 +248,93 @@ I made this little website just for you ❤️
 
 </section>
 
-<section id="story" class="fade">
+<section id="letter">
 
-<h1>Our Story</h1>
+<div id="envelope">
 
-<p>
-Write how you met here...
-</p>
+<div class="letterIcon">
+💌
+</div>
 
-</section>
-
-<section class="fade">
-
-<h1>Why I Love You ❤️</h1>
+<h2>A little letter for you...</h2>
 
 <p>
-Write all the reasons you love her here...
+I made this just for you ❤️
 </p>
 
-</section>
+<button onclick="openLetter()">
+Open My Heart ❤️
+</button>
 
-<section class="fade">
+</div>
 
-<h1>My Letter 💌</h1>
+<div id="chapter1" class="chapter">
+
+<h1>Chapter 1 ✨</h1>
 
 <p>
-Paste your five paragraphs here.
+YOUR FIRST PARAGRAPH HERE
 </p>
 
-</section>
+<button onclick="nextChapter(2)">
+Continue ❤️
+</button>
 
-<section class="fade">
+</div>
 
-<h1>I Love You ❤️</h1>
+<div id="chapter2" class="chapter">
+
+<h1>Chapter 2 ❤️</h1>
 
 <p>
-Happy Anniversary.
-Thank you for choosing me every single day.
-I can't wait to make thousands more memories with you.
+YOUR SECOND PARAGRAPH HERE
 </p>
 
+<button onclick="nextChapter(3)">
+Continue ❤️
+</button>
+
+</div>
+
+<div id="chapter3" class="chapter">
+
+<h1>Chapter 3 🌹</h1>
+
+<p>
+YOUR THIRD PARAGRAPH HERE
+</p>
+
+<button onclick="nextChapter(4)">
+Continue ❤️
+</button>
+
+</div>
+
+<div id="chapter4" class="chapter">
+
+<h1>Chapter 4 💍</h1>
+
+<p>
+YOUR FOURTH PARAGRAPH HERE
+</p>
+
+<button onclick="finalMessage()">
+One Last Thing ❤️
+</button>
+
+</div>
+
+<div id="final" class="chapter">
+
+<h1>Forever & Always ❤️</h1>
+
+<p>
+No matter how much time passes,
+I will always choose you.
+Thank you for being mine ❤️
+</p>
+
+</div>
 </section>
 
 <script>
@@ -259,11 +365,16 @@ function typeTitle() {
 typeTitle();
 
 function yesLove(){
-document.getElementById('story').scrollIntoView({
+
+document.getElementById('letter').scrollIntoView({
 behavior:'smooth'
 });
-}
 
+setTimeout(()=>{
+document.getElementById('welcome').style.display="none";
+},500);
+
+}
 function moveNo(){
 
 let button=document.getElementById("noBtn");
@@ -272,6 +383,35 @@ let x=Math.random()*400-200;
 let y=Math.random()*250-125;
 
 button.style.transform=`translate(${x}px,${y}px)`;
+
+}
+function openLetter(){
+
+document.getElementById("envelope").style.display="none";
+
+document.getElementById("chapter1").style.display="block";
+
+}
+
+
+function nextChapter(number){
+
+document.querySelectorAll(".chapter").forEach(chapter=>{
+chapter.style.display="none";
+});
+
+document.getElementById("chapter"+number).style.display="block";
+
+}
+
+
+function finalMessage(){
+
+document.querySelectorAll(".chapter").forEach(chapter=>{
+chapter.style.display="none";
+});
+
+document.getElementById("final").style.display="block";
 
 }
 </script>
