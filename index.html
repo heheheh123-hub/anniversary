@@ -455,6 +455,55 @@ pointer-events:none;
 z-index:5;
 }
 
+#lyricsContainer{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:9999;
+}
+
+.lyric{
+    position:absolute;
+    max-width:40%;
+    padding:15px 25px;
+
+    color:white;
+    font-size:32px;
+    font-weight:bold;
+
+    background:rgba(0,0,0,.25);
+    backdrop-filter:blur(8px);
+
+    border-radius:20px;
+
+    opacity:0;
+    transform:translateY(40px) scale(.95);
+
+    transition:
+        opacity .7s,
+        transform .7s;
+
+    text-shadow:
+        0 0 10px #ff4d6d,
+        0 0 20px #ff4d6d,
+        0 0 40px #ff4d6d;
+}
+
+.lyric.show{
+    opacity:1;
+    transform:translateY(0) scale(1);
+}
+
+.left{
+    left:6%;
+    top:25%;
+}
+
+.right{
+    right:6%;
+    top:60%;
+}
+
 </style>
 
 </head>
@@ -469,6 +518,8 @@ z-index:5;
     <source src="music.mp3" type="audio/mpeg">
 </audio>
 
+<div id="lyricsContainer"></div>
+    
 <div id="darkOverlay"></div>
 
 <div class="hearts">
@@ -865,17 +916,19 @@ function createHeart(){
 
 function toggleMusic(){
 
-let music=document.getElementById("music");
+    let music = document.getElementById("music");
 
-if(music.paused){
-music.play();
-}
-else{
-music.pause();
-}
+    music.currentTime = 0;
+    currentLyric = 0;
+
+    if(music.paused){
+        music.play();
+    }
+    else{
+        music.pause();
+    }
 
 }
-
 const relationshipDate = new Date("2025-12-12T11:20:00");
 
 function updateRelationshipTimer(){
@@ -906,11 +959,86 @@ Together & Counting ❤️
 `;
 }
 
+//=============================
+// LYRIC SYSTEM
+//=============================
+
+let currentLyric = 0;
+
+const lyrics = [
+
+];
+
+function showLyric(text,side){
+
+    const div=document.createElement("div");
+
+    div.className=`lyric ${side}`;
+
+    div.innerHTML=text;
+
+    document
+        .getElementById("lyricsContainer")
+        .appendChild(div);
+
+    requestAnimationFrame(()=>{
+        div.classList.add("show");
+    });
+
+    setTimeout(()=>{
+
+        div.classList.remove("show");
+
+        setTimeout(()=>{
+            div.remove();
+        },700);
+
+    },3000);
+
+}
+
+// =============================
+// LYRIC TIMESTAMP MAKER
+// =============================
+
+document.addEventListener("keydown", function(e){
+
+    if(e.code === "Space"){
+
+        const music = document.getElementById("music");
+
+        console.log(
+            "Timestamp:",
+            music.currentTime.toFixed(2),
+            "seconds"
+        );
+
+    }
+
+});
+
+const music = document.getElementById("music");
+music.addEventListener("timeupdate",()=>{
+
+    if(currentLyric>=lyrics.length) return;
+
+    if(music.currentTime>=lyrics[currentLyric].time){
+
+        showLyric(
+            lyrics[currentLyric].text,
+            lyrics[currentLyric].side
+        );
+
+        currentLyric++;
+
+    }
+
+});
+
 updateRelationshipTimer();
 setInterval(updateRelationshipTimer,1000);
 
 </script>
-
 
 </body>
 </html>
