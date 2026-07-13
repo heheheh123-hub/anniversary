@@ -383,7 +383,7 @@ top:40%;
 transition:2s;
 }
 
-#herPic{
+#youPic{
 left:-300px;
 opacity:1;
 transition:2s;
@@ -555,7 +555,7 @@ One Last Thing ❤️
 
 <div class="photos">
 
-<img id="herPic" src="her.jpg">
+<img id="youPic" src="you.jpg">
 
 <img id="mePic" src="me.jpg">
 
@@ -773,16 +773,16 @@ function startMovieEnding(){
 const ending = document.getElementById("movieEnding");
 ending.style.display="block";
 
-const her = document.getElementById("herPic");
+const you = document.getElementById("youPic");
 const me = document.getElementById("mePic");
 const together = document.getElementById("togetherPic");
 const shine = document.getElementById("shine");
 const finalText = document.getElementById("loveFinal");
 
 
-// bring her picture in
+// bring you picture in
 setTimeout(()=>{
-    her.style.left="25%";
+    you.style.left="25%";
 },500);
 
 
@@ -801,7 +801,7 @@ setTimeout(()=>{
 // pictures disappear and joined picture appears
 setTimeout(()=>{
 
-    her.style.opacity="0";
+    you.style.opacity="0";
     me.style.opacity="0";
 
     together.style.opacity="1";
