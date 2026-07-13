@@ -23,6 +23,23 @@ cursor:pointer;
 box-shadow:0 0 20px #ff4d6d;
 }
 
+#relationshipTimer{
+    line-height:1.8;
+    margin-top:25px;
+    font-size:28px;
+    font-weight:bold;
+    color:#fff;
+    text-shadow:0 0 10px #ff4d6d;
+}
+
+#relationshipTimer strong{
+    color:#ff7ea5;
+    font-size:36px;
+    text-shadow:
+        0 0 10px #ff4d6d,
+        0 0 20px #ff4d6d;
+}
+
 html{
     scroll-behavior:smooth;
 }
@@ -408,8 +425,12 @@ transition:2s;
 
 #loveFinal{
 opacity:0;
-transition:2s;
 margin-top:650px;
+transform:translateY(40px);
+transition:2s;
+font-size:30px;
+font-weight:bold;
+text-shadow:0 0 15px #ff4d6d;
 }
 
 
@@ -447,10 +468,6 @@ z-index:5;
     <source src="music.mp3" type="audio/mpeg">
 </audio>
 
-<audio id="typingSound">
-    <source src="typing.mp3" type="audio/mpeg">
-</audio>
-
 <div id="darkOverlay"></div>
 
 <div class="hearts">
@@ -469,6 +486,8 @@ z-index:5;
 <p>
 I made this little website just for you ❤️
 </p>
+
+<div id="relationshipTimer"></div>
 
 <h2>Do you love me? 🥺</h2>
 
@@ -617,11 +636,7 @@ const element = document.getElementById(id);
 
         if(i < text.length){
             element.innerHTML += text.charAt(i);
-          let sound = document.getElementById("typingSound");
 
-sound.currentTime = 0;
-sound.volume = 0.2;
-sound.play();
             i++;
             setTimeout(typing,30);
         }else{
@@ -817,7 +832,8 @@ setTimeout(()=>{
 
 // final message appears
 setTimeout(()=>{
-    finalText.style.opacity="1";
+finalText.style.opacity="1";
+finalText.style.transform="translateY(0)";
 },7500);
 
 }
@@ -860,6 +876,40 @@ music.pause();
 }
 
 }
+
+const relationshipDate = new Date("2025-12-12T11:20:00");
+
+function updateRelationshipTimer(){
+
+    const now = new Date();
+    let diff = now - relationshipDate;
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+    diff %= (1000 * 60 * 60 * 24);
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+
+    diff %= (1000 * 60 * 60);
+    const minutes = Math.floor(diff / (1000 * 60));
+
+    diff %= (1000 * 60);
+    const seconds = Math.floor(diff / 1000);
+
+  document.getElementById("relationshipTimer").innerHTML =
+`
+❤️ <br>
+<strong>${days}</strong> Days
+<strong>${hours}</strong> Hours
+<strong>${minutes}</strong> Minutes
+<strong>${seconds}</strong> Seconds
+<br>
+Together & Counting ❤️
+`;
+}
+
+updateRelationshipTimer();
+setInterval(updateRelationshipTimer,1000);
+
 </script>
 
 
