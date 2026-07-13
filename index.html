@@ -48,6 +48,7 @@ width:180px;
 height:120px;
 background:#ff4d6d;
 position:relative;
+z-index:100;
 margin:30px auto;
 border-radius:10px;
 cursor:pointer;
@@ -688,11 +689,9 @@ function openLetter(){
     const envelope=document.querySelector(".envelope");
     const overlay=document.getElementById("darkOverlay");
     const paper=document.querySelector(".paper");
+envelope.classList.add("glow");
 
-    overlay.classList.add("show");
-
-    envelope.classList.add("glow");
-
+overlay.classList.add("show");
 
     setTimeout(()=>{
         envelope.classList.add("open");
