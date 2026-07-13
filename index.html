@@ -18,8 +18,15 @@ margin:30px auto;
 border-radius:10px;
 cursor:pointer;
 transition:1s;
+box-shadow:0 0 0 transparent;
 }
 
+.envelope.glow{
+box-shadow:
+0 0 30px #ff4d6d,
+0 0 70px #ff758f,
+0 0 120px #ff4d6d;
+}
 .flap{
 position:absolute;
 top:0;
@@ -42,7 +49,8 @@ display:flex;
 justify-content:center;
 align-items:center;
 font-size:40px;
-transition:1s;
+transition:1.5s;
+z-index:2;
 }
 
 .open .flap{
@@ -190,27 +198,6 @@ transform:translateY(-110vh);
 }
 }
 
-.stars{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-font-size:25px;
-opacity:0.4;
-animation:moveStars 20s linear infinite;
-pointer-events:none;
-}
-
-@keyframes moveStars{
-from{
-transform:translateY(0);
-}
-to{
-transform:translateY(-100vh);
-}
-}
-
 #noBtn{
 position:relative;
 transition:0.2s;
@@ -267,8 +254,12 @@ text-shadow:0 0 40px #ff4d6d;
 
 .chapter{
 display:none;
-opacity:1;
-animation:appear 0.8s ease;
+opacity:0;
+}
+
+.chapter.show{
+display:block;
+animation:appear 0.8s ease forwards;
 }
 @keyframes appear{
 
@@ -284,14 +275,81 @@ transform:translateY(0);
 
 }
 
+#darkOverlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:black;
+opacity:0;
+pointer-events:none;
+z-index:50;
+transition:1s;
+}
+
+#darkOverlay.show{
+opacity:0.7;
+}
+
+
+.flyAway{
+animation:flyAway 1.5s forwards;
+}
+
+
+@keyframes flyAway{
+
+0%{
+transform:translateY(0) scale(1);
+opacity:1;
+}
+
+50%{
+transform:translateY(-150px) scale(1.4);
+opacity:1;
+}
+
+100%{
+transform:translateY(-500px) scale(0.3);
+opacity:0;
+}
+
+}
+
+.foldAway{
+
+animation:foldAway 1s forwards;
+transform-origin:top center;
+perspective:1000px;
+
+}
+
+
+@keyframes foldAway{
+
+0%{
+transform:rotateX(0deg);
+opacity:1;
+}
+
+50%{
+transform:rotateX(45deg);
+opacity:0.7;
+}
+
+100%{
+transform:rotateX(90deg);
+opacity:0;
+}
+
+}
 </style>
 
 </head>
 
 <body>
-<div class="stars">
-⭐ ⭐ ⭐ ⭐ ⭐ ⭐ ⭐ ⭐ ⭐ ⭐
-</div>
+<div id="darkOverlay"></div>
 
 <div class="hearts">
 <span>❤️</span>
@@ -453,8 +511,14 @@ function yesLove(){
     welcome.classList.add("fadeOut");
 
     setTimeout(() => {
-        welcome.remove();
-    }, 800);
+
+        welcome.style.display="none";
+
+        document.getElementById("letter").scrollIntoView({
+            behavior:"smooth"
+        });
+
+    },800);
 
 }
 function moveNo(){
@@ -472,44 +536,67 @@ let opened = false;
 function openLetter(){
 
     if(opened) return;
-    opened = true;
+    opened=true;
 
     const envelope=document.querySelector(".envelope");
+    const overlay=document.getElementById("darkOverlay");
+    const paper=document.querySelector(".paper");
 
-    envelope.classList.add("open");
+    overlay.classList.add("show");
+
+    envelope.classList.add("glow");
+
 
     setTimeout(()=>{
+        envelope.classList.add("open");
+    },500);
 
-        document.getElementById("envelope").style.display="none";
 
-        document.getElementById("chapter1").style.display="block";
-        typeMessage("text1");
+    setTimeout(()=>{
+        paper.classList.add("flyAway");
+    },1500);
 
-    },1200);
+
+  setTimeout(()=>{
+
+document.getElementById("envelope").style.display="none";
+
+overlay.classList.remove("show");
+
+const firstChapter = document.getElementById("chapter1");
+firstChapter.classList.add("show");
+
+typeMessage("text1");
+
+},3500);
+
 }
 
 function nextChapter(number){
 
-const current = [...document.querySelectorAll(".chapter")]
-    .find(chapter => chapter.style.display === "block");
+const current = document.querySelector(".chapter.show");
+
 if(current){
 
-    current.classList.add("fadeOut");
+    current.classList.remove("show");
+    current.classList.add("foldAway");
 
     setTimeout(()=>{
 
         current.style.display="none";
-        current.classList.remove("fadeOut");
+        current.classList.remove("foldAway");
 
         const next=document.getElementById("chapter"+number);
-        next.style.display="block";
+
+        next.classList.add("show");
+
         typeMessage("text"+number);
 
-    },800);
+    },1000);
 
 }
 
-}
+} 
 
 function finalMessage(){
 
@@ -523,7 +610,7 @@ setTimeout(()=>{
 current.style.display="none";
 current.classList.remove("fadeOut");
 
-document.getElementById("final").style.display="block";
+document.getElementById("final").classList.add("show");
 typeMessage("text5");
 for(let i=0;i<25;i++){
     setTimeout(createHeart,i*200);
