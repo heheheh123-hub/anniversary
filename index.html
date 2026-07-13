@@ -734,41 +734,37 @@ let endingStarted = false;
 
 function finalMessage(){
 
-if(endingStarted) return;
-endingStarted = true;
+    if (endingStarted) return;
+    endingStarted = true;
 
-const current = [...document.querySelectorAll(".chapter")]
-.find(chapter => chapter.classList.contains("show"));
+    const current = [...document.querySelectorAll(".chapter")]
+        .find(chapter => chapter.classList.contains("show"));
 
-function finalMessage(){
+    if(current){
 
-const current = [...document.querySelectorAll(".chapter")]
-.find(chapter => chapter.classList.contains("show"));
+        current.classList.add("fadeOut");
 
-if(current){
+        setTimeout(()=>{
 
-current.classList.add("fadeOut");
+            current.style.display="none";
+            current.classList.remove("fadeOut");
+            current.classList.remove("show");
 
-setTimeout(()=>{
+            startMovieEnding();
 
-current.style.display="none";
-current.classList.remove("fadeOut");
-current.classList.remove("show");
+            setTimeout(()=>{
+                document.getElementById("movieEnding").style.display = "none";
+                document.getElementById("final").classList.add("show");
+                typeMessage("text5");
+            },9000);
 
-startMovieEnding();
+            for(let i=0;i<25;i++){
+                setTimeout(createHeart,i*200);
+            }
 
-setTimeout(()=>{
-    document.getElementById("final").classList.add("show");
-    typeMessage("text5");
-},9000);
+        },800);
 
-for(let i=0;i<25;i++){
-    setTimeout(createHeart,i*200);
-}
-
-},800);
-
-}
+    }
 
 }
 
