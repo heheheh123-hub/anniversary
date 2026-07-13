@@ -730,6 +730,16 @@ if(current){
 
 } 
 
+let endingStarted = false;
+
+function finalMessage(){
+
+if(endingStarted) return;
+endingStarted = true;
+
+const current = [...document.querySelectorAll(".chapter")]
+.find(chapter => chapter.classList.contains("show"));
+
 function finalMessage(){
 
 const current = [...document.querySelectorAll(".chapter")]
