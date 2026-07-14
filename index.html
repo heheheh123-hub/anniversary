@@ -435,21 +435,27 @@ transition:2s;
 }
 
 #loveFinal{
+
 position:absolute;
+
 left:8%;
 top:50%;
-transform:translateY(-50%) translateX(-80px);
+
+transform:translateY(-50%);
 
 width:40%;
+
 text-align:left;
 
 opacity:0;
-transition:2s;
 
 font-size:30px;
 font-weight:bold;
 
 text-shadow:0 0 15px #ff4d6d;
+
+line-height:1.6;
+
 }
 
 #movieEnding::after{
@@ -745,9 +751,7 @@ One Last Thing ❤️
 
 <img id="togetherPic" src="together.jpg">
 
-<p id="loveFinal">
-Ayat, I genuinely love you a lot, and inshaAllah we will be together soon ❤️
-</p>
+<p id="loveFinal"></p>
 
 </div>
 
@@ -991,12 +995,37 @@ setTimeout(()=>{
 },6500);
 
 
-// final message appears
+// final message starts typing immediately after together picture appears
 setTimeout(()=>{
-finalText.style.opacity="1";
-finalText.style.transform="translateY(-50%) translateX(0)";
-},7500);
 
+finalText.style.opacity="1";
+
+const message =
+"Ayat, I genuinely love you so much ❤️\n\n" +
+"Through every dream, every plan, every little moment, " +
+"my biggest wish is simply a future where I get to spend it all with you. " +
+"InshaAllah, one day we look back at this and smile knowing we made it together ❤️";
+
+let i = 0;
+
+function typeFinal(){
+
+    if(i < message.length){
+
+        finalText.innerHTML += message.charAt(i)
+        .replace("\n","<br>");
+
+        i++;
+
+        setTimeout(typeFinal,40);
+
+    }
+
+}
+
+typeFinal();
+
+},5200);
 }
 
 function createHeart(){
