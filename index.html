@@ -543,25 +543,69 @@ z-index:5000;
 #wishlistText{
 
 font-size:55px;
-
 font-weight:bold;
-
 text-align:center;
-
 max-width:900px;
 
 color:white;
 
 opacity:0;
 
-transform:scale(.8);
+transform:translateY(-250px);
 
-transition:1s;
+text-shadow:none;
 
+}
+
+@keyframes dropIn{
+
+0%{
+opacity:0;
+transform:translateY(-250px);
+}
+
+70%{
+opacity:1;
+transform:translateY(25px);
+}
+
+85%{
+transform:translateY(-10px);
+}
+
+100%{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+@keyframes glowUp{
+
+0%{
+text-shadow:none;
+}
+
+100%{
 text-shadow:
-0 0 20px #ff4d6d,
-0 0 50px #ff4d6d,
-0 0 80px #ff4d6d;
+0 0 30px #ff4d6d,
+0 0 60px #ff4d6d,
+0 0 120px #ff4d6d,
+0 0 180px #ff4d6d,
+0 0 240px #ff4d6d;
+}
+
+}
+
+@keyframes fadeSlow{
+
+0%{
+opacity:1;
+}
+
+100%{
+opacity:0;
+}
 
 }
 
@@ -1001,7 +1045,14 @@ const relationshipDate = new Date("2025-12-12T11:20:00");
 const wishlistItems=[
 
 "I don't forget things...",
-"Especially the things you want ❤️",
+
+"...",
+
+"Especially...",
+
+"...",
+
+"The things you want ❤️",
 
 "🌹 Monthly Flowers",
 
@@ -1015,11 +1066,13 @@ const wishlistItems=[
 
 "🚗 Late Night Drives",
 
+"🍿 Movie Nights",
+
 "✈️ Travelling Together",
 
-"🏡 Our Future Home",
+"🤍 Every Promise I've Ever Made",
 
-"🤍 Every Promise I've Ever Made"
+"🏡 Our Future Home"
 
 ];
 
@@ -1038,12 +1091,21 @@ const scene=document.getElementById("wishlistScene");
 const text=document.getElementById("wishlistText");
 
 scene.style.display="flex";
+scene.innerHTML='<div id="wishlistText"></div>';
 
 let i=0;
 
 function nextItem(){
 
 if(i>=wishlistItems.length){
+
+const button=document.createElement("button");
+
+button.innerHTML="Continue ❤️";
+
+button.style.marginTop="60px";
+
+button.onclick=function(){
 
 scene.style.display="none";
 
@@ -1052,6 +1114,10 @@ document
 .classList.add("show");
 
 typeMessage("text4");
+
+};
+
+scene.appendChild(button);
 
 return;
 
@@ -1064,19 +1130,46 @@ setTimeout(()=>{
 
 text.innerHTML=wishlistItems[i];
 
-text.style.opacity=1;
-text.style.transform="scale(1.08)";
+if(wishlistItems[i]=="The things you want ❤️"){
+    text.style.fontSize="72px";
+}else{
+    text.style.fontSize="55px";
+}
+
+text.style.animation="none";
+void text.offsetWidth;
+
+text.style.animation="dropIn .8s forwards";
 
 setTimeout(()=>{
 
-text.style.transform="scale(1)";
+text.style.animation+=" , glowUp 1.2s forwards";
 
-},400);
+},1300);
+
+setTimeout(()=>{
+
+text.style.animation+=" , fadeSlow 1.2s forwards";
+
+},3400);
 
 i++;
 
-setTimeout(nextItem,2400);
+let delay=5000;
 
+if(wishlistItems[i-1]=="..."){
+    delay=2000;
+}
+
+if(wishlistItems[i-1]=="Especially..."){
+    delay=3000;
+}
+
+if(wishlistItems[i-1]=="The things you want ❤️"){
+    delay=4500;
+}
+
+setTimeout(nextItem,delay);
 },700);
 
 }
