@@ -6,6 +6,14 @@
 <title>Happy Anniversary ❤️</title>
 
 <style>
+
+.wishList{
+margin-top:40px;
+font-size:28px;
+line-height:2;
+text-align:left;
+}
+
 #musicControl{
 position:fixed;
 bottom:25px;
@@ -415,25 +423,34 @@ transition:2s;
 
 #togetherPic{
 position:absolute;
-width:350px;
-border-radius:20px;
-left:50%;
+right:8%;
 top:50%;
-transform:translate(-50%,-50%);
+transform:translateY(-50%);
+
+width:420px;
+border-radius:20px;
+
 opacity:0;
 transition:2s;
 }
 
 #loveFinal{
+position:absolute;
+left:8%;
+top:50%;
+transform:translateY(-50%) translateX(-80px);
+
+width:40%;
+text-align:left;
+
 opacity:0;
-margin-top:650px;
-transform:translateY(40px);
 transition:2s;
+
 font-size:30px;
 font-weight:bold;
+
 text-shadow:0 0 15px #ff4d6d;
 }
-
 
 #movieEnding::after{
 content:"";
@@ -502,6 +519,50 @@ z-index:5;
 .right{
     right:6%;
     top:60%;
+}
+
+#wishlistScene{
+
+position:fixed;
+top:0;
+left:0;
+
+width:100%;
+height:100vh;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+background:rgba(0,0,0,.95);
+
+z-index:5000;
+
+}
+
+#wishlistText{
+
+font-size:55px;
+
+font-weight:bold;
+
+text-align:center;
+
+max-width:900px;
+
+color:white;
+
+opacity:0;
+
+transform:scale(.8);
+
+transition:1s;
+
+text-shadow:
+0 0 20px #ff4d6d,
+0 0 50px #ff4d6d,
+0 0 80px #ff4d6d;
+
 }
 
 </style>
@@ -600,9 +661,15 @@ Continue ❤️
 
 <p id="text3"></p>
 
-<button onclick="nextChapter(4)">
+<button onclick="showWishlist()">
 Continue ❤️
 </button>
+
+</div>
+
+<div id="wishlistScene" style="display:none;">
+
+<div id="wishlistText"></div>
 
 </div>
 
@@ -883,7 +950,7 @@ setTimeout(()=>{
 // final message appears
 setTimeout(()=>{
 finalText.style.opacity="1";
-finalText.style.transform="translateY(0)";
+finalText.style.transform="translateY(-50%) translateX(0)";
 },7500);
 
 }
@@ -930,6 +997,95 @@ function toggleMusic(){
 
 }
 const relationshipDate = new Date("2025-12-12T11:20:00");
+
+const wishlistItems=[
+
+"I don't forget things...",
+"Especially the things you want ❤️",
+
+"🌹 Monthly Flowers",
+
+"💍 Your Pink Diamond Ring",
+
+"🧸 Giant Teddy Bear",
+
+"🌸 Lego Flowers",
+
+"🛍️ Shopping Dates",
+
+"🚗 Late Night Drives",
+
+"✈️ Travelling Together",
+
+"🏡 Our Future Home",
+
+"🤍 Every Promise I've Ever Made"
+
+];
+
+function showWishlist(){
+
+const current=document.getElementById("chapter3");
+
+current.classList.remove("show");
+current.classList.add("fadeOut");
+
+setTimeout(()=>{
+
+current.style.display="none";
+
+const scene=document.getElementById("wishlistScene");
+const text=document.getElementById("wishlistText");
+
+scene.style.display="flex";
+
+let i=0;
+
+function nextItem(){
+
+if(i>=wishlistItems.length){
+
+scene.style.display="none";
+
+document
+.getElementById("chapter4")
+.classList.add("show");
+
+typeMessage("text4");
+
+return;
+
+}
+
+text.style.opacity=0;
+text.style.transform="scale(.8)";
+
+setTimeout(()=>{
+
+text.innerHTML=wishlistItems[i];
+
+text.style.opacity=1;
+text.style.transform="scale(1.08)";
+
+setTimeout(()=>{
+
+text.style.transform="scale(1)";
+
+},400);
+
+i++;
+
+setTimeout(nextItem,2400);
+
+},700);
+
+}
+
+nextItem();
+
+},800);
+
+}
 
 function updateRelationshipTimer(){
 
