@@ -1088,12 +1088,13 @@ setTimeout(()=>{
 current.style.display="none";
 
 const scene=document.getElementById("wishlistScene");
-const text=document.getElementById("wishlistText");
 
 scene.style.display="flex";
-scene.innerHTML='<div id="wishlistText"></div>';
+
+const text=document.getElementById("wishlistText");
 
 let i=0;
+
 
 function nextItem(){
 
@@ -1109,9 +1110,9 @@ button.onclick=function(){
 
 scene.style.display="none";
 
-document
-.getElementById("chapter4")
-.classList.add("show");
+const chapter4=document.getElementById("chapter4");
+
+chapter4.classList.add("show");
 
 typeMessage("text4");
 
@@ -1123,23 +1124,22 @@ return;
 
 }
 
+
 text.style.opacity=0;
 text.style.transform="scale(.8)";
 
+
 setTimeout(()=>{
+
 
 text.innerHTML=wishlistItems[i];
 
-if(wishlistItems[i]=="The things you want ❤️"){
-    text.style.fontSize="72px";
-}else{
-    text.style.fontSize="55px";
-}
 
 text.style.animation="none";
 void text.offsetWidth;
 
 text.style.animation="dropIn .8s forwards";
+
 
 setTimeout(()=>{
 
@@ -1147,39 +1147,49 @@ text.style.animation+=" , glowUp 1.2s forwards";
 
 },1300);
 
+
 setTimeout(()=>{
 
 text.style.animation+=" , fadeSlow 1.2s forwards";
 
 },3400);
 
-i++;
 
 let delay=5000;
 
-if(wishlistItems[i-1]=="..."){
-    delay=2000;
+
+if(wishlistItems[i]=="..."){
+delay=2000;
 }
 
-if(wishlistItems[i-1]=="Especially..."){
-    delay=3000;
+
+if(wishlistItems[i]=="Especially..."){
+delay=3000;
 }
 
-if(wishlistItems[i-1]=="The things you want ❤️"){
-    delay=4500;
+
+if(wishlistItems[i]=="The things you want ❤️"){
+delay=4500;
 }
+
+
+i++;
 
 setTimeout(nextItem,delay);
+
+
 },700);
+
 
 }
 
+
 nextItem();
+
 
 },800);
 
 }
-
 function updateRelationshipTimer(){
 
     const now = new Date();
