@@ -1571,12 +1571,12 @@ function animateStars(){
         ctx.beginPath();
         ctx.arc(s.x,s.y,s.r + universeBoost*1.5,0,Math.PI*2);
 
-        ctx.fillStyle = `rgba(
-            255,
-            190,
-            220,
-            ${0.45 + universeBoost*0.55}
-        )`;
+ctx.fillStyle = `rgba(
+    255,
+    255,
+    255,
+    ${0.8 + universeBoost*0.2}
+)`;
 
         ctx.fill();
     }
