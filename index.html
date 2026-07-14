@@ -167,7 +167,7 @@ margin-bottom:20px;
 
 p{
 max-width:800px;
-font-size:22px;
+font-size:18px;
 line-height:1.8;
 }
 
@@ -514,17 +514,17 @@ z-index:5;
 
     position:absolute;
 
-    max-width:38%;
+    max-width:30%;
 
-    padding:12px 22px;
+    padding:10px 18px;
 
     color:white;
 
-    font-size:22px;
+    font-size:18px;
 
     font-weight:bold;
 
-    background:rgba(0,0,0,.22);
+    background:rgba(0,0,0,.20);
 
     backdrop-filter:blur(6px);
 
@@ -1491,6 +1491,7 @@ for(let i=0;i<90;i++){
 }
 
 let connect = false;
+let universeBoost = 0;
 
 setInterval(()=>{
 
@@ -1504,33 +1505,80 @@ setInterval(()=>{
 
 },9000);
 
-function animateStars(){
+function shootingStar(){
 
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    if(universeBoost>0){
+    const star = document.createElement("div");
 
-    universeBoost*=0.992;
+    star.style.position = "fixed";
+    star.style.top = "-100px";
+    star.style.left = (Math.random()*60+20) + "vw";
+
+    star.style.width = "3px";
+    star.style.height = "3px";
+
+    star.style.background = "white";
+    star.style.borderRadius = "50%";
+
+    star.style.boxShadow =
+        "0 0 20px white, 0 0 40px #ff7ea5";
+
+    star.style.zIndex = "9999";
+    star.style.pointerEvents = "none";
+
+    document.body.appendChild(star);
+
+    let x = 0;
+    let y = 0;
+
+    const interval = setInterval(()=>{
+
+        x += 18;
+        y += 12;
+
+        star.style.transform = `translate(${x}px, ${y}px)`;
+
+        star.style.boxShadow =
+            `-${x/2}px ${y/2}px 25px rgba(255,255,255,.8),
+             0 0 25px #ff7ea5`;
+
+    },16);
+
+    setTimeout(()=>{
+
+        clearInterval(interval);
+        star.remove();
+
+    },900);
 
 }
 
+function animateStars(){
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    if(universeBoost > 0){
+        universeBoost *= 0.992;
+    }
+
     for(const s of stars){
 
-        s.x += s.vx;
-        s.y += s.vy;
+        s.x += s.vx * (1 + universeBoost * 3);
+        s.y += s.vy * (1 + universeBoost * 3);
 
-        if(s.x<0||s.x>canvas.width)s.vx*=-1;
-        if(s.y<0||s.y>canvas.height)s.vy*=-1;
+        if(s.x < 0 || s.x > canvas.width) s.vx *= -1;
+        if(s.y < 0 || s.y > canvas.height) s.vy *= -1;
 
         ctx.beginPath();
-        ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-ctx.fillStyle=`rgba(
-255,
-190,
-220,
-${0.45 + universeBoost*0.55}
-)`;
-        ctx.fill();
+        ctx.arc(s.x,s.y,s.r + universeBoost*1.5,0,Math.PI*2);
 
+        ctx.fillStyle = `rgba(
+            255,
+            190,
+            220,
+            ${0.45 + universeBoost*0.55}
+        )`;
+
+        ctx.fill();
     }
 
     if(connect){
@@ -1539,24 +1587,25 @@ ${0.45 + universeBoost*0.55}
 
             for(let j=i+1;j<stars.length;j++){
 
-                const dx=stars[i].x-stars[j].x;
-                const dy=stars[i].y-stars[j].y;
+                const dx = stars[i].x - stars[j].x;
+                const dy = stars[i].y - stars[j].y;
 
-                const dist=Math.sqrt(dx*dx+dy*dy);
+                const dist = Math.sqrt(dx*dx + dy*dy);
 
-                if(dist<130){
+                if(dist < 160){
 
                     ctx.beginPath();
-
                     ctx.moveTo(stars[i].x,stars[i].y);
                     ctx.lineTo(stars[j].x,stars[j].y);
 
-                    ctx.strokeStyle=
-`rgba(255,77,109,${
-0.18 + universeBoost*0.72
-})`;
-                    ctx.lineWidth=1;
+                    ctx.strokeStyle = `rgba(
+                        255,
+                        77,
+                        109,
+                        ${0.18 + universeBoost*0.72}
+                    )`;
 
+                    ctx.lineWidth = 1 + universeBoost*2;
                     ctx.stroke();
 
                 }
@@ -1571,67 +1620,16 @@ ${0.45 + universeBoost*0.55}
 
 }
 
-animateStars();
-
-let universeBoost = 0;
-
 function universeMoment(){
 
-function shootingStar(){
-
-    const star = document.createElement("div");
-
-    star.style.position="fixed";
-    star.style.top="-100px";
-    star.style.left=(Math.random()*60+20)+"vw";
-
-    star.style.width="3px";
-    star.style.height="3px";
-
-    star.style.background="white";
-    star.style.borderRadius="50%";
-
-    star.style.boxShadow=
-    "0 0 20px white,0 0 40px #ff7ea5";
-
-    star.style.zIndex="9999";
-    star.style.pointerEvents="none";
-
-    document.body.appendChild(star);
-
-    let x=0;
-    let y=0;
-
-    const interval=setInterval(()=>{
-
-        x+=18;
-        y+=12;
-
-        star.style.transform=
-        `translate(${x}px,${y}px)`;
-
-        star.style.boxShadow=
-        `-${x/2}px ${y/2}px 25px rgba(255,255,255,.8),
-         0 0 25px #ff7ea5`;
-
-    },16);
-
-    setTimeout(()=>{
-
-        clearInterval(interval);
-        star.remove();
-
-    },900);
-
-}
-
     universeBoost = 1;
-
     connect = true;
 
-    setTimeout(()=>{
+    for(let i=0;i<8;i++){
+        setTimeout(shootingStar, i*350);
+    }
 
-        universeBoost = 0;
+    setTimeout(()=>{
 
         connect = false;
 
