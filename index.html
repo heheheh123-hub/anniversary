@@ -550,7 +550,7 @@ z-index:5;
 
     padding:10px 18px;
 
-    color:white;
+    color:#fff;
 
     font-size:18px;
 
@@ -562,6 +562,8 @@ z-index:5;
 
     border-radius:18px;
 
+    text-shadow:0 0 8px #ff4d6d;
+
     opacity:0;
 
     transform:translateY(15px);
@@ -569,8 +571,6 @@ z-index:5;
     transition:
         opacity .8s ease,
         transform .8s ease;
-
-    text-shadow:0 0 8px #ff4d6d;
 
 }
 
@@ -943,8 +943,12 @@ if(!audioStarted){
 }
 
 music.volume = 0.3;
-music.play();
 
+if(!audioStarted){
+    setupVisualizer();
+}
+
+music.play().catch(()=>{});
 const welcome = document.getElementById("welcome");
 
 welcome.classList.add("fadeOut");
@@ -1184,44 +1188,55 @@ let audioStarted = false;
 
 function setupVisualizer(){
 
-    const audio = document.getElementById("music");
+    const audio=document.getElementById("music");
 
-    const audioContext = new AudioContext();
+    const AudioContext=window.AudioContext||window.webkitAudioContext;
 
-    const analyser = audioContext.createAnalyser();
+    const audioContext=new AudioContext();
 
-    analyser.fftSize = 64;
+    const analyser=audioContext.createAnalyser();
 
-    const source = audioContext.createMediaElementSource(audio);
+    analyser.fftSize=256;
+
+    const source=audioContext.createMediaElementSource(audio);
 
     source.connect(analyser);
     analyser.connect(audioContext.destination);
 
-    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+    const buffer=new Uint8Array(analyser.frequencyBinCount);
 
-    const bars = document.querySelectorAll("#musicVisualizer span");
+    function animate(){
 
-    function animateBars(){
-
-        analyser.getByteFrequencyData(dataArray);
+        analyser.getByteFrequencyData(buffer);
 
         bars.forEach((bar,index)=>{
 
-            const value = dataArray[index*2];
+            const start=index*8;
+            const end=start+8;
 
-            const height = Math.max(10,value*0.4);
+            let sum=0;
 
-            bar.style.height = height+"px";
+            for(let i=start;i<end;i++){
+
+                sum+=buffer[i];
+
+            }
+
+            const avg=sum/8;
+
+            const height=Math.max(8,avg*0.55);
+
+            bar.style.height=height+"px";
 
         });
 
-        requestAnimationFrame(animateBars);
+        requestAnimationFrame(animate);
 
     }
 
-    animateBars();
+    animate();
 
-    audioStarted = true;
+    audioStarted=true;
 
 }
 
@@ -1234,16 +1249,13 @@ function toggleMusic(){
     }
 
     if(music.paused){
-
-        music.play();
-
+music.play().catch(()=>{});
     }else{
-
         music.pause();
-
     }
 
 }
+    
 const relationshipDate = new Date("2025-12-12T11:20:00");
 
 const wishlistItems=[
@@ -1532,19 +1544,21 @@ function showLyric(text, side){
 
     // Fade out previous lyric
     if(currentLyricElement){
-        currentLyricElement.classList.remove("show");
+
+        const old=currentLyricElement;
+
+        old.classList.remove("show");
 
         setTimeout(()=>{
-            if(currentLyricElement)
-                currentLyricElement.remove();
+            old.remove();
         },800);
+
     }
 
     const div=document.createElement("div");
 
     div.className=`lyric ${side}`;
-
-    div.innerHTML=text;
+    div.textContent=text;
 
     document
         .getElementById("lyricsContainer")
@@ -1557,54 +1571,6 @@ function showLyric(text, side){
     currentLyricElement=div;
 
 }
-
-let lyricTimes = [];
-
-document.addEventListener("keydown", function(e){
-
-    if(e.code === "Space"){
-
-        e.preventDefault();
-
-const music = document.getElementById("music");
-
-const AudioContext =
-window.AudioContext ||
-window.webkitAudioContext;
-
-const audioContext = new AudioContext();
-
-const analyser = audioContext.createAnalyser();
-
-const source =
-audioContext.createMediaElementSource(music);
-
-source.connect(analyser);
-
-analyser.connect(audioContext.destination);
-
-analyser.fftSize = 64;
-
-const bufferLength = analyser.frequencyBinCount;
-
-const dataArray =
-new Uint8Array(bufferLength);
-
-const bars =
-document.querySelectorAll("#visualizer span");
-        let time = music.currentTime.toFixed(2);
-
-        lyricTimes.push(
-            `{time:${time}, text:"PUT LYRIC HERE", side:"left"},`
-        );
-
-        console.log(
-            lyricTimes[lyricTimes.length-1]
-        );
-
-    }
-
-});
 const music = document.getElementById("music");
 // =====================
 // MUSIC VISUALIZER
@@ -1612,29 +1578,6 @@ const music = document.getElementById("music");
 
 const bars = document.querySelectorAll("#musicVisualizer span");
 
-setInterval(()=>{
-
-    if(!music.paused){
-
-        bars.forEach(bar=>{
-
-            const h = 8 + Math.random()*35;
-
-            bar.style.height = h + "px";
-
-        });
-
-    }else{
-
-        bars.forEach(bar=>{
-
-            bar.style.height = "10px";
-
-        });
-
-    }
-
-},80);
 music.addEventListener("timeupdate",()=>{
 
     if(currentLyric>=lyrics.length) return;
@@ -1652,6 +1595,10 @@ music.addEventListener("timeupdate",()=>{
 
 });
 
+music.addEventListener("ended", () => {
+    currentLyric = 0;
+});
+    
 updateRelationshipTimer();
 setInterval(updateRelationshipTimer,1000);
 
@@ -1684,18 +1631,6 @@ vy:(Math.random()-0.5)*0.35,
 
 let connect = false;
 let universeBoost = 0;
-
-setInterval(()=>{
-
-    connect = true;
-
-    setTimeout(()=>{
-
-        connect = false;
-
-    },3000);
-
-},9000);
 
 function shootingStar(){
 
@@ -1777,40 +1712,33 @@ ctx.shadowColor = "white";
         ctx.fill();
     }
 
-    if(connect){
+// Always draw constellation
+for(let i=0;i<stars.length;i++){
 
-        for(let i=0;i<stars.length;i++){
+    for(let j=i+1;j<stars.length;j++){
 
-            for(let j=i+1;j<stars.length;j++){
+        const dx = stars[i].x-stars[j].x;
+        const dy = stars[i].y-stars[j].y;
 
-                const dx = stars[i].x - stars[j].x;
-                const dy = stars[i].y - stars[j].y;
+        const dist = Math.sqrt(dx*dx+dy*dy);
 
-                const dist = Math.sqrt(dx*dx + dy*dy);
+        if(dist<150){
 
-                if(dist < 160){
+            ctx.beginPath();
+            ctx.moveTo(stars[i].x,stars[i].y);
+            ctx.lineTo(stars[j].x,stars[j].y);
 
-                    ctx.beginPath();
-                    ctx.moveTo(stars[i].x,stars[i].y);
-                    ctx.lineTo(stars[j].x,stars[j].y);
+            ctx.strokeStyle=`rgba(255,77,109,${0.08+universeBoost*0.35})`;
 
-                    ctx.strokeStyle = `rgba(
-                        255,
-                        77,
-                        109,
-                        ${0.18 + universeBoost*0.72}
-                    )`;
+            ctx.lineWidth=0.8+universeBoost;
 
-                    ctx.lineWidth = 1 + universeBoost*2;
-                    ctx.stroke();
-
-                }
-
-            }
+            ctx.stroke();
 
         }
 
     }
+
+}
 
     requestAnimationFrame(animateStars);
 
@@ -1833,30 +1761,7 @@ function universeMoment(){
 
 }
 
-function animateVisualizer(){
-
-    analyser.getByteFrequencyData(dataArray);
-
-    bars.forEach((bar,i)=>{
-
-        const value =
-        dataArray[i] || 0;
-
-        const height =
-        Math.max(8,value*0.4);
-
-        bar.style.height =
-        height+"px";
-
-    });
-
-    requestAnimationFrame(
-        animateVisualizer
-    );
-
-}
-
-animateVisualizer();
+animateStars();
 
 </script>
 
