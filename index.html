@@ -7,6 +7,38 @@
 
 <style>
 
+#visualizer{
+
+position:fixed;
+
+bottom:28px;
+left:25px;
+
+display:flex;
+align-items:flex-end;
+gap:4px;
+
+height:40px;
+
+z-index:2000;
+
+}
+
+#visualizer span{
+
+width:5px;
+height:8px;
+
+background:#ff4d6d;
+
+border-radius:20px;
+
+box-shadow:0 0 10px #ff4d6d;
+
+transition:height .08s linear;
+
+}
+
 #final{
     position:absolute;
     top:50%;
@@ -648,6 +680,48 @@ opacity:0;
 
 }
 
+#musicVisualizer{
+
+position:fixed;
+
+bottom:25px;
+
+left:25px;
+
+display:flex;
+
+align-items:flex-end;
+
+gap:5px;
+
+height:45px;
+
+z-index:2000;
+
+pointer-events:none;
+
+}
+
+#musicVisualizer span{
+
+width:5px;
+
+height:10px;
+
+background:#ff4d6d;
+
+border-radius:10px;
+
+box-shadow:
+0 0 10px #ff4d6d,
+0 0 20px #ff4d6d;
+
+transform-origin:bottom;
+
+transition:.08s linear;
+
+}
+
 </style>
 
 </head>
@@ -658,6 +732,17 @@ opacity:0;
 
 <div id="musicControl" onclick="toggleMusic()">
 🎵
+</div>
+
+<div id="musicVisualizer">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
 </div>
 
 <audio id="music" loop>
@@ -851,8 +936,14 @@ const element = document.getElementById(id);
 
 function yesLove(){
 
-document.getElementById("music").volume = 0.3;
-document.getElementById("music").play();
+const music = document.getElementById("music");
+
+if(!audioStarted){
+    setupVisualizer();
+}
+
+music.volume = 0.3;
+music.play();
 
 const welcome = document.getElementById("welcome");
 
@@ -1089,18 +1180,67 @@ function createHeart(){
 
 }
 
+let audioStarted = false;
+
+function setupVisualizer(){
+
+    const audio = document.getElementById("music");
+
+    const audioContext = new AudioContext();
+
+    const analyser = audioContext.createAnalyser();
+
+    analyser.fftSize = 64;
+
+    const source = audioContext.createMediaElementSource(audio);
+
+    source.connect(analyser);
+    analyser.connect(audioContext.destination);
+
+    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+    const bars = document.querySelectorAll("#musicVisualizer span");
+
+    function animateBars(){
+
+        analyser.getByteFrequencyData(dataArray);
+
+        bars.forEach((bar,index)=>{
+
+            const value = dataArray[index*2];
+
+            const height = Math.max(10,value*0.4);
+
+            bar.style.height = height+"px";
+
+        });
+
+        requestAnimationFrame(animateBars);
+
+    }
+
+    animateBars();
+
+    audioStarted = true;
+
+}
+
 function toggleMusic(){
 
-    let music = document.getElementById("music");
+    const music = document.getElementById("music");
 
-    music.currentTime = 0;
-    currentLyric = 0;
+    if(!audioStarted){
+        setupVisualizer();
+    }
 
     if(music.paused){
+
         music.play();
-    }
-    else{
+
+    }else{
+
         music.pause();
+
     }
 
 }
@@ -1426,8 +1566,32 @@ document.addEventListener("keydown", function(e){
 
         e.preventDefault();
 
-        const music = document.getElementById("music");
+const music = document.getElementById("music");
 
+const AudioContext =
+window.AudioContext ||
+window.webkitAudioContext;
+
+const audioContext = new AudioContext();
+
+const analyser = audioContext.createAnalyser();
+
+const source =
+audioContext.createMediaElementSource(music);
+
+source.connect(analyser);
+
+analyser.connect(audioContext.destination);
+
+analyser.fftSize = 64;
+
+const bufferLength = analyser.frequencyBinCount;
+
+const dataArray =
+new Uint8Array(bufferLength);
+
+const bars =
+document.querySelectorAll("#visualizer span");
         let time = music.currentTime.toFixed(2);
 
         lyricTimes.push(
@@ -1442,6 +1606,35 @@ document.addEventListener("keydown", function(e){
 
 });
 const music = document.getElementById("music");
+// =====================
+// MUSIC VISUALIZER
+// =====================
+
+const bars = document.querySelectorAll("#musicVisualizer span");
+
+setInterval(()=>{
+
+    if(!music.paused){
+
+        bars.forEach(bar=>{
+
+            const h = 8 + Math.random()*35;
+
+            bar.style.height = h + "px";
+
+        });
+
+    }else{
+
+        bars.forEach(bar=>{
+
+            bar.style.height = "10px";
+
+        });
+
+    }
+
+},80);
 music.addEventListener("timeupdate",()=>{
 
     if(currentLyric>=lyrics.length) return;
@@ -1639,6 +1832,31 @@ function universeMoment(){
     },5000);
 
 }
+
+function animateVisualizer(){
+
+    analyser.getByteFrequencyData(dataArray);
+
+    bars.forEach((bar,i)=>{
+
+        const value =
+        dataArray[i] || 0;
+
+        const height =
+        Math.max(8,value*0.4);
+
+        bar.style.height =
+        height+"px";
+
+    });
+
+    requestAnimationFrame(
+        animateVisualizer
+    );
+
+}
+
+animateVisualizer();
 
 </script>
 
