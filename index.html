@@ -568,10 +568,9 @@ z-index:5;
 
     transform:translateY(15px);
 
-    transition:
-        opacity .8s ease,
-        transform .8s ease;
-
+ transition:
+opacity .28s ease,
+transform .28s cubic-bezier(.22,1,.36,1);
 }
 
 .lyric.show{
@@ -1570,6 +1569,29 @@ function showLyric(text, side){
 
     currentLyricElement=div;
 
+    // Fade away the final lyric
+if (currentLyric === lyrics.length - 1) {
+
+    setTimeout(() => {
+
+        if (currentLyricElement) {
+
+            currentLyricElement.classList.remove("show");
+
+            setTimeout(() => {
+
+                if (currentLyricElement) {
+                    currentLyricElement.remove();
+                    currentLyricElement = null;
+                }
+
+            }, 800);
+
+        }
+
+    }, 3500); // keep the final lyric on screen for 3.5 seconds
+}
+
 }
 const music = document.getElementById("music");
 // =====================
@@ -1578,27 +1600,63 @@ const music = document.getElementById("music");
 
 const bars = document.querySelectorAll("#musicVisualizer span");
 
-music.addEventListener("timeupdate",()=>{
+function lyricEngine(){
 
-    if(currentLyric>=lyrics.length) return;
+    if(!music.paused){
 
-    if(music.currentTime>=lyrics[currentLyric].time){
+        while(
+            currentLyric < lyrics.length &&
+music.currentTime + 0.05 >= lyrics[currentLyric].time
+        ){
 
-        showLyric(
-            lyrics[currentLyric].text,
-            lyrics[currentLyric].side
-        );
+            showLyric(
+                lyrics[currentLyric].text,
+                lyrics[currentLyric].side
+            );
 
-        currentLyric++;
+            currentLyric++;
+        }
+
+    }
+
+    requestAnimationFrame(lyricEngine);
+
+}
+
+lyricEngine();
+
+music.addEventListener("ended", () => {
+
+    currentLyric = 0;
+
+    if(currentLyricElement){
+
+        currentLyricElement.classList.remove("show");
+
+        setTimeout(() => {
+            if(currentLyricElement){
+                currentLyricElement.remove();
+                currentLyricElement = null;
+            }
+        },800);
 
     }
 
 });
 
-music.addEventListener("ended", () => {
+music.addEventListener("seeked",()=>{
+
     currentLyric = 0;
+
+    while(
+        currentLyric < lyrics.length &&
+        music.currentTime >= lyrics[currentLyric].time
+    ){
+        currentLyric++;
+    }
+
 });
-    
+
 updateRelationshipTimer();
 setInterval(updateRelationshipTimer,1000);
 
