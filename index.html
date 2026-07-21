@@ -7,6 +7,86 @@
 
 <style>
 
+#credits{
+
+position:fixed;
+inset:0;
+
+background:black;
+
+display:none;
+justify-content:center;
+align-items:flex-end;
+
+overflow:hidden;
+
+z-index:100000;
+
+}
+
+#creditsContent{
+
+text-align:center;
+
+color:white;
+
+font-size:26px;
+
+animation:creditsRoll 35s linear forwards;
+
+padding-bottom:-20vh;
+
+}
+
+#credits h1{
+
+font-size:70px;
+
+margin-bottom:30px;
+
+text-shadow:
+0 0 20px #ff4d6d,
+0 0 50px #ff4d6d;
+
+}
+
+#credits h2{
+
+font-size:48px;
+
+color:#ff7ea5;
+
+}
+
+#credits p{
+
+font-size:28px;
+
+line-height:2;
+
+}
+
+#credits button{
+
+position:fixed;
+
+left:50%;
+bottom:8%;
+
+transform:translateX(-50%);
+
+opacity:0;
+
+transition:1.5s;
+
+font-size:24px;
+
+padding:18px 45px;
+
+z-index:100001;
+
+}
+
 #visualizer{
 
 position:fixed;
@@ -148,6 +228,18 @@ transform:translateY(-100px);
 
 .fadeOut{
     animation:fadeOut 0.8s forwards;
+}
+
+@keyframes fadeBlack{
+
+from{
+opacity:0;
+}
+
+to{
+opacity:1;
+}
+
 }
 
 @keyframes fadeOut{
@@ -943,6 +1035,22 @@ if(!audioStarted){
 
 music.volume = 0.3;
 
+const fade = setInterval(()=>{
+
+    if(music.volume>0.02){
+
+        music.volume -= 0.01;
+
+    }else{
+
+        music.volume=0;
+
+        clearInterval(fade);
+
+    }
+
+},100);
+
 if(!audioStarted){
     setupVisualizer();
 }
@@ -1062,9 +1170,12 @@ function finalMessage(){
 
          setTimeout(()=>{
 
-document.getElementById("foreverFinal").style.opacity="1";
+    document.getElementById("foreverFinal").style.opacity="1";
 
-typeMessage("text5");
+    typeMessage("text5");
+
+    // Wait for the paragraph to finish typing
+    setTimeout(showCredits, 18000);
 
 },9000);
             for(let i=0;i<25;i++){
@@ -1802,6 +1913,34 @@ for(let i=0;i<stars.length;i++){
 
 }
 
+function showCredits(){
+
+    fadeMusic();
+
+    const credits=document.getElementById("credits");
+
+    credits.style.display="flex";
+
+    const content=document.getElementById("creditsContent");
+
+    content.style.animation="creditsRoll 35s linear forwards";
+
+    setTimeout(()=>{
+
+        const button=credits.querySelector("button");
+
+        button.style.opacity="1";
+
+    },35000);
+
+}
+
+function restartStory(){
+
+    location.reload();
+
+}
+    
 function universeMoment(){
 
     universeBoost = 1;
@@ -1822,6 +1961,50 @@ function universeMoment(){
 animateStars();
 
 </script>
+
+<div id="credits">
+
+    <div id="creditsContent">
+
+        <h1>❤️ The End ❤️</h1>
+
+        <p>Made with endless love.</p>
+
+        <br>
+
+        <p>For</p>
+        <h2>Ayat ❤️</h2>
+
+        <br><br>
+
+        <p>Every animation</p>
+        <p>Every paragraph</p>
+        <p>Every line of code</p>
+        <p>Every lyric</p>
+
+        <br>
+
+        <p>was made</p>
+
+        <p>with one person in mind.</p>
+
+        <br><br>
+
+        <h2>I love you.</h2>
+
+        <br><br><br>
+
+        <p>Happy Anniversary ❤️</p>
+
+        <br><br><br><br>
+
+        <button onclick="restartStory()">
+            ❤️ Replay Our Story ❤️
+        </button>
+
+    </div>
+
+</div>
 
 </body>
 </html>
